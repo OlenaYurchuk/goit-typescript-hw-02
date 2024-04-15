@@ -52,13 +52,15 @@ function App() {
     getImages();
   }, [page, query])
 
+  const hasMoreImagesToLoad = images.length > 0 && !error && !isLoading;
+
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
       {isLoading && <Loader />}
       {error && <ErrorMessage />}
       {images.length > 0 && <ImageGallery images={images} />}
-      {images.length > 0 && <LoadMoreBtn onClick={handleLoadMore} />}
+      {hasMoreImagesToLoad > 0 && <LoadMoreBtn onClick={handleLoadMore} />}
     </div>
   )
 }
