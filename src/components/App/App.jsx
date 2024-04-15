@@ -1,40 +1,65 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios';
 import SearchBar from '../SearchBar/SearchBar';
 import ImageGallery from '../ImageGallery/ImageGallery';
-import { KEY } from '../../data/accessKey';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import Loader from '../Loader/Loader'
+import { fetchImages } from '../../data/images-api';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import './App.css'
 
 
+
 function App() {
-  axios.defaults.baseURL = "https://api.unsplash.com/";
 
   const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false);
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (newQuery) => {
+    setQuery(newQuery);
+    setPage(1);
+    setImages([]);
+  }
+
+  const handleLoadMore = () => {
+    setPage(page + 1);
+  }
 
   useEffect(() => {
-    async function fetchImages() {
-      const params = new URLSearchParams({
-        client_id: KEY,
-        per_page: 12
-      });
+    if (query === "") {
+      return;
+    }
 
+    async function getImages() {
       try {
-        const response = await axios.get("/photos", { params });
-        console.log(response.data)
-        setImages(response.data.hits);
+        setError(false);
+        setIsLoading(true);
+        const data = await fetchImages(query, page);
+        console.log(data)
+        setImages((prevImages) => {
+          return [...prevImages, ...data];
+        });
       } catch (error) {
-        console.error("Error fetching images:", error)
+        setError(true);
+      } finally {
+        setIsLoading(false);
       }
 
     }
 
-    fetchImages();
-  }, [])
+    getImages();
+  }, [page, query])
+
   return (
-    <>
-      <SearchBar />
+    <div>
+      <SearchBar onSearch={handleSearch} />
+      {isLoading && <Loader />}
+      {error && <ErrorMessage />}
       {images.length > 0 && <ImageGallery images={images} />}
-    </>
+      {images.length > 0 && <LoadMoreBtn onClick={handleLoadMore} />}
+    </div>
   )
 }
 

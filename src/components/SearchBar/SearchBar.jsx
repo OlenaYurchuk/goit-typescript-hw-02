@@ -1,15 +1,25 @@
-export default function SearchBar() {
+
+import { Formik, Form, Field } from 'formik';
+
+export default function SearchBar({ onSearch }) {
   return (
-    <header>
-      <form >
-        <input
+    <Formik
+      initialValues={{ query: "" }}
+      onSubmit={(values, actions) => {
+        onSearch(values.query);
+        actions.resetForm()
+      }}
+    >
+      <Form>
+        <Field
           type="text"
-          name="search"
+          name="query"
+          placeholder="search images and photos"
           autoComplete="off"
-          autoFocus placeholder="Search images and photos"
+          autoFocus
         />
         <button type="submit">Search</button>
-      </form>
-    </header>
+      </Form>
+    </Formik>
   )
 }

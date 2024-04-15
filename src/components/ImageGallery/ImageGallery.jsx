@@ -4,9 +4,9 @@ export default function ImageGallery({ images }) {
   return (
     <ul>
       {
-        images.map(({ id }) => (
-          <li key={id}>
-            <ImageCard />
+        images.map((image) => (
+          <li key={image.id}>
+            <ImageCard image={image} />
           </li>
         ))
       }
