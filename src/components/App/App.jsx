@@ -50,7 +50,6 @@ function App() {
         setError(false);
         setIsLoading(true);
         const data = await fetchImages(query, page);
-        console.log(data)
         setImages((prevImages) => {
           return [...prevImages, ...data];
         });

@@ -9,9 +9,12 @@ export default function ImageModal({ isOpen, onRequestClose, image: { urls: { re
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Image Modal"
+      shouldCloseOnEsc={true}
+      shouldCloseOnOverlayClick={true}
       className={css.content}
       overlayClassName={css.overlay}
-      ImageModal={css.img}
+      imgClassName={css.img}
+
     >
       <img src={regular} alt={alt_description} />
     </ReactModal>
