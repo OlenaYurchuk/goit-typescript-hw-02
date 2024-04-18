@@ -3,11 +3,14 @@ import css from './ImageGallery.module.css'
 import { nanoid } from 'nanoid'
 
 export default function ImageGallery({ images, openModal }) {
+  const handleImageClick = (image) => {
+    openModal(image);
+  }
   return (
     <ul className={css.gallery}>
       {
         images.map((image) => (
-          <li className={css.galleryItem} key={nanoid()} onClick={() => openModal(image)}>
+          <li className={css.galleryItem} key={nanoid()} onClick={() => handleImageClick(image)}>
             <ImageCard image={image} />
           </li>
         ))
