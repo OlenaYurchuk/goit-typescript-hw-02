@@ -6,65 +6,63 @@ import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
 import Loader from '../Loader/Loader';
 import ImageModal from '../ImageModal/ImageModal';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import {Image} from './types'
 import './App.css'
 
+function App(): JSX.Element {
 
+  const [images, setImages] = useState<Image[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [query, setQuery] = useState<string>("");
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
-function App() {
-
-  const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleSearch = (newQuery) => {
+  const handleSearch = (newQuery: string): void => {
     setQuery(newQuery);
     setPage(1);
     setImages([]);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = (): void => {
     setPage(page + 1);
   };
 
-  const openModal = (image) => {
+  const openModal = (image: Image): void => {
     setSelectedImage(image);
     setModalIsOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setSelectedImage(null);
     setModalIsOpen(false);
   };
 
   useEffect(() => {
-    if (query === "") {
+    if (query === "" || page < 1) {
       return;
     }
 
-    async function getImages() {
+    const getImages = async (): Promise<void> => {
       try {
-        setError(false);
+        setError(null);
         setIsLoading(true);
         const data = await fetchImages(query, page);
         setImages((prevImages) => {
           return [...prevImages, ...data];
         });
       } catch (error) {
-        setError(true);
+        setError('An error occured while fetching images. Please try again.');
       } finally {
         setIsLoading(false);
       }
-
     }
 
     getImages();
   }, [page, query])
 
-  const hasMoreImagesToLoad = images.length > 0 && !error && !isLoading;
+  const hasMoreImagesToLoad: boolean = images.length > 0 && !error && !isLoading;
 
   return (
     <div>

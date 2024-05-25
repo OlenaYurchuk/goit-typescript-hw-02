@@ -1,10 +1,26 @@
-import css from './ImageCard.module.css'
+import React from 'react';
+import css from './ImageCard.module.css';
 
-export default function ImageCard({ onClick, image: { urls: { small }, alt_description } }) {
+interface ImageCardProps {
+  onClick: () => void;
+  image: {
+    urls: {
+      small: string;
+    };
+    alt_description: string;
+  };
+}
+
+const ImageCard: React.FC<ImageCardProps> = ({ onClick, image: { urls: { small }, alt_description } }) => {
   const handleClick = () => {
-    onClick && onClick();
-  }
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <img className={css.img} src={small} alt={alt_description} onClick={handleClick} />
-  )
-}
+  );
+};
+
+export default ImageCard;
