@@ -3,14 +3,6 @@ import { KEY } from './accessKey';
 
 axios.defaults.baseURL = "https://api.unsplash.com";
 
-interface UnsplashImage {
-  id: string;
-  alt_description: string;
-  urls: {
-    regular: string;
-  }
-}
-
 export const fetchImages = async (searchQuery: string, currentPage: number) => {
   const response = await axios.get(`/search/photos?`, {
     params: {
@@ -21,10 +13,6 @@ export const fetchImages = async (searchQuery: string, currentPage: number) => {
       per_page: 12
     },
   });
-  return response.data.results.map((image: UnsplashImage) => ({
-    id: image.id,
-    title: image.alt_description,
-    imageUrl: image.urls.regular,
-  }));
+  return response.data.results
 }
 
