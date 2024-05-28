@@ -48,7 +48,7 @@ function App(): JSX.Element {
       try {
         setError(null);
         setIsLoading(true);
-        const data = await fetchImages(query, page);
+        const data: Image[] = await fetchImages(query, page);
         setImages((prevImages) => {
           return [...prevImages, ...data];
         });
